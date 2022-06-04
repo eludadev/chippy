@@ -1,61 +1,140 @@
-<script setup>
-	import { ref, defineProps, defineEmits, defineExpose } from 'vue'
-
-	const input = ref(null)
-
-	const props = defineProps({
-		is_warning: { type: Boolean, default: false }
-	})
-
-	const emit = defineEmits(['submit', 'typing'])
-
-	function handleKeyup(event) {
-		const input_elem = event.target
-		const key = event.key
-
-		const whitespace_keys = ['Enter', ' ']
-		const visible_keys = [',', ';']
-		const submit_keys = [...whitespace_keys, ...visible_keys]
-
-		if (submit_keys.includes(key)) {
-			let value = input_elem.value.trim()
-			// Delete the visible key (, or ; etc...) if it exists
-			if (visible_keys.includes(key)) value = value.slice(0, -1)
-
-			// Only submit if value is not empty
-			if (value.length) {
-				emit('submit', value)
-			} else {
-				input_elem.value = ''
+<script>
+	export default {
+		props: {
+			autocomplete: { type: Array, default: [] },
+			isWarning: { type: Boolean, default: false },
+			color: { type: String, default: '#fff' },
+			placeholder: { type: String, default: '' }
+		},
+		emits: ['submit', 'typing'],
+		data() {
+			return {
+				toAutocomplete: '',
+				userInput: ''
 			}
-		}
-		else {
-			let value = input_elem.value.trim()
-			emit('typing', value)
-		}
+		},
+		setup() {
+				const whitespaceKeys = ['Enter', ' ', 'Tab']
+				const visibleKeys = [',', ';']
+				const submitKeys = [...whitespaceKeys, ...visibleKeys]
+
+				const cancelAutocompleteKey = 'Backspace'
+				const autocompleteKeys = [...submitKeys]
+
+				return {
+					submitKeys,
+					autocompleteKeys,
+					cancelAutocompleteKey
+				}
+		},
+		methods: {
+			onKeyup(event) {
+				const key = event.key
+
+				let value = this.userInput.trim()
+				this.$emit('typing', value)
+
+				if (this.submitKeys.includes(key)) {
+					// Only submit if value is not empty
+					if (value.length) {
+						this.$emit('submit', value)
+					} else {
+						this.userInput = ''
+					}
+				}
+			},
+			onKeydown(event) {
+				const key = event.key
+	
+				if (this.autocompleteKeys.includes(key)) {
+					event.preventDefault()
+					if (this.toAutocomplete) {
+						this.autocompleteInput()
+						this.$emit('submit', this.userInput)
+					}
+				}
+				else if (this.cancelAutocompleteKey === key) {
+					if (this.toAutocomplete) event.preventDefault()
+					this.clearAutocomplete()
+				}
+
+			},
+			onInput(event) {
+				if (event.inputType !== 'deleteContentBackward') {
+					this.updateAutocomplete()
+				}
+			},
+			focus() {
+				this.$refs.input.focus()
+			},
+			clear() {
+				this.userInput = ''
+				this.$refs.input.focus()
+			},
+			autocompleteInput() {
+				this.userInput = toConsistentCase(this.userInput + this.toAutocomplete)
+				this.clearAutocomplete()
+			},
+			clearAutocomplete() {
+				this.toAutocomplete = ''
+			},
+			updateAutocomplete() {
+				const getValue = () => {
+					// Check if autocomplete is enabled
+					if (!this.$props.autocomplete) return ''
+					// If input is empty, then all autocomplete candidates match!
+					if (!this.userInput.length) return ''
+
+					for (const candidate of this.$props.autocomplete) {
+						if (candidate.toLowerCase().startsWith(this.userInput.toLowerCase())) {
+							// Return the last part that can be autocompleted
+							// 'co|depen' -> 'depen'
+							return candidate.slice(this.userInput.length)
+						}
+					}
+					return ''
+				}
+				this.toAutocomplete = convertToCase(getValue(), this.userInput)
+			}
+		},
+		expose: ['focus', 'clear']
 	}
 
-	function focus() {
-		input.value.focus()
+	function toConsistentCase(str) {
+		const isLower = isLowerCase(str[0])
+
+		return convertToCase(str, str[0])
 	}
 
-	function clear() {
-		const input_elem = input.value
+	function convertToCase(value, source) {
+		const isLower = isLowerCase(source[0])
 
-		input_elem.value = ''
-		input_elem.focus()
+		return isLower ? value.toLowerCase() : value.toUpperCase()
 	}
 
-	defineExpose({
-		focus,
-		clear
-	})
+	function isLowerCase(str) {
+		return str === str.toLowerCase()
+	}
 </script>
 
 <template>
-	<input :class="['bg-stone-800 text-stone-50 px-2 py-1\
+	<div class="relative">
+		<input :class="['bg-stone-800 text-stone-50 px-2 py-1\
 				    focus:outline-0 focus:filter focus:brightness-110',
-				    {'border-2 border-red-800': is_warning}]"
-		   @keyup="handleKeyup"
-		   ref="input"/>
+				    {'ring-2 ring-red-800': $props.isWarning}]"
+	   	ref="input"
+		v-model="userInput"
+	   	@keyup="onKeyup"
+	   	@keydown="onKeydown"
+		@input="onInput"
+		@click="clearAutocomplete() && this.focus()"
+		:style="{ color: $props.color }"
+		:placeholder="placeholder"
+		/>
+	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
+	   	:style="{ color: $props.color }">
+	   		<span class="opacity-0">{{ userInput }}</span>
+	   		<span>{{ toAutocomplete }}</span>
+	   	</div>
+	</div>
 </template>
