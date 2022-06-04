@@ -140,7 +140,8 @@
 </script>
 
 <template>
-	<form class="relative" @submit.prevent>
+	<label for="chips-form" class="sr-only">Input your tags</label>
+	<form class="relative" id="chips-form" @submit.prevent>
 		<input :class="['bg-stone-800 text-stone-50 px-2 py-1\
 				    focus:outline-0 focus:filter focus:brightness-110',
 				    {'ring-2 ring-red-800': $props.isWarning}]"
