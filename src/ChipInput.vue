@@ -39,6 +39,10 @@
         this.$refs.input.clear()
         this.typingChip = ''
         this.$refs.input.focus()
+      },
+      deleteChip(index) {
+        this.chips.splice(index, 1)
+        this.$refs.input.focus()
       }
     }
   }
@@ -68,7 +72,7 @@
     />
     <ul class="flex flex-wrap gap-1">
       <li v-for="({color, value}, index) in chips">
-        <chip-item :color="color" :key="value" @close="chips.splice(index, 1)">
+        <chip-item :color="color" :key="value" @close="deleteChip(index)">
           {{ value }}
         </chip-item>
       </li>
