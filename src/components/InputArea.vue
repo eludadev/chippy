@@ -176,7 +176,7 @@
 		:style="{ color: $props.color }"
 		:placeholder="placeholder"
 		autocomplete="off"
-		:list="!smAndLarger && isDataListShown ? 'autocomplete-list' : ''"
+		:list="smAndLarger && isDataListShown ? 'autocomplete-list' : ''"
 		:value="modelValue"
 		/>
 	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
