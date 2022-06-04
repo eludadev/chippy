@@ -49,7 +49,7 @@
 					// Only submit if value is not empty
 					if (this.userInput.length) {
 						this.autocompleteInput()
-						this.$emit('submit', toConsistentCase(this.userInput))
+						this.$emit('submit', this.userInput)
 					} else {
 						this.userInput = ''
 					}
@@ -90,7 +90,7 @@
 						this.updateAutocomplete(value)
 					}
 				}
-				this.userInput = value
+				this.userInput = value.toLowerCase()
 				this.$refs.input.value = this.userInput
 
 				this.$emit('update:modelValue', this.userInput)
@@ -105,7 +105,7 @@
 				this.$emit('update:modelValue', this.userInput)
 			},
 			autocompleteInput() {
-				this.userInput = toConsistentCase(this.userInput.trimRight() + this.toAutocomplete)
+				this.userInput = this.userInput.trimRight() + this.toAutocomplete
 				this.clearAutocomplete()
 			},
 			clearAutocomplete() {
@@ -127,30 +127,15 @@
 					}
 					return ''
 				}
-				this.toAutocomplete = convertToCase(getValue(), value)
+				this.toAutocomplete = getValue().toLowerCase()
+			}
+		},
+		computed: {
+			datalist() {
+				return this.$props.autocomplete.filter(a => a.toLowerCase().startsWith(this.userInput.toLowerCase()))
 			}
 		},
 		expose: ['focus', 'clear']
-	}
-
-	function toConsistentCase(str) {
-		if (str.length) {
-			const source = str.slice(-1)
-			return convertToCase(str, source)
-		}
-		else {
-			return ''
-		}
-	}
-
-	function convertToCase(value, source) {
-		const isLower = source.length ? isLowerCase(source.slice(-1)) : false
-
-		return isLower ? value.toLowerCase() : value.toUpperCase()
-	}
-
-	function isLowerCase(str) {
-		return str === str.toLowerCase()
 	}
 </script>
 
@@ -177,7 +162,7 @@
 
 		<!-- Datalist is hidden on mobile (smAndLarger) -->
 	   	<datalist id="autocomplete-list">
-	   		<option :value="item" v-for="item in $props.autocomplete"/>
+	   		<option :value="item" v-for="item in datalist"/>
 	   	</datalist>
 	</form>
 </template>
