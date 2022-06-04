@@ -14,7 +14,6 @@
 			return {
 				toAutocomplete: '',
 				userInput: '',
-				isDataListShown: true
 			}
 		},
 		setup() {
@@ -95,8 +94,6 @@
 				this.$refs.input.value = this.userInput
 
 				this.$emit('update:modelValue', this.userInput)
-
-				this.hideDataList()
 			},
 			focus() {
 				this.$refs.input.focus()
@@ -131,12 +128,6 @@
 					return ''
 				}
 				this.toAutocomplete = convertToCase(getValue(), value)
-			},
-			hideDataList() {
-				this.isDataListShown = false
-			},
-			showDataList() {
-				this.isDataListShown = true
 			}
 		},
 		expose: ['focus', 'clear']
@@ -172,11 +163,10 @@
 	   	@keyup="onKeyup"
 	   	@keydown="onKeydown"
 		@input="onInput"
-		@blur="showDataList"
 		:style="{ color: $props.color }"
 		:placeholder="placeholder"
 		autocomplete="off"
-		:list="smAndLarger && isDataListShown ? 'autocomplete-list' : ''"
+		:list="smAndLarger && 'autocomplete-list'"
 		:value="modelValue"
 		/>
 	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
