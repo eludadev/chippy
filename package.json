@@ -7,7 +7,6 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
-    "inter-ui": "^3.19.3",
     "vue": "^3.2.33"
   },
   "devDependencies": {
