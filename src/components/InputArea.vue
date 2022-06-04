@@ -101,13 +101,13 @@
 	}
 
 	function toConsistentCase(str) {
-		const isLower = isLowerCase(str[0])
+		const isLower = str.length ? isLowerCase(str[0]) : false
 
 		return convertToCase(str, str[0])
 	}
 
 	function convertToCase(value, source) {
-		const isLower = isLowerCase(source[0])
+		const isLower = source.length ? isLowerCase(source[0]) : false
 
 		return isLower ? value.toLowerCase() : value.toUpperCase()
 	}
