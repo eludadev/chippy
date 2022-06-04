@@ -25,6 +25,9 @@
 					autocompleteKeys
 				}
 		},
+		mounted() {
+			this.autocompleteList = this.$props.autocomplete
+		},
 		methods: {
 			onKeyup(event) {
 				// We only want to check the last character
@@ -143,7 +146,7 @@
 </script>
 
 <template>
-	<div class="relative">
+	<form class="relative" @submit.prevent>
 		<input :class="['bg-stone-800 text-stone-50 px-2 py-1\
 				    focus:outline-0 focus:filter focus:brightness-110',
 				    {'ring-2 ring-red-800': $props.isWarning}]"
@@ -153,11 +156,16 @@
 		@input="onInput"
 		:style="{ color: $props.color }"
 		:placeholder="placeholder"
+		list="autocomplete-list"
 		/>
 	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
 	   	:style="{ color: $props.color }">
 	   		<span class="opacity-0">{{ userInput }}</span>
 	   		<span>{{ toAutocomplete }}</span>
 	   	</div>
-	</div>
+
+	   	<datalist id="autocomplete-list">
+	   		<option :value="item" v-for="item in $props.autocomplete"/>
+	   	</datalist>
+	</form>
 </template>
