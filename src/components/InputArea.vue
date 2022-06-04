@@ -1,4 +1,6 @@
 <script>
+	import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
 	export default {
 		props: {
 			autocomplete: { type: Array, default: [] },
@@ -10,7 +12,8 @@
 		data() {
 			return {
 				toAutocomplete: '',
-				userInput: ''
+				userInput: '',
+				isDataListShown: true
 			}
 		},
 		setup() {
@@ -20,9 +23,13 @@
 
 				const autocompleteKeys = [...submitKeys]
 
+				const breakpoints = useBreakpoints(breakpointsTailwind)
+				const smAndLarger = breakpoints.greater('sm')
+
 				return {
 					submitKeys,
-					autocompleteKeys
+					autocompleteKeys,
+					isNotMobile: smAndLarger
 				}
 		},
 		mounted() {
@@ -86,6 +93,8 @@
 				}
 				this.userInput = value
 				this.$refs.input.value = this.userInput
+
+				this.hideDataList()
 			},
 			focus() {
 				this.$refs.input.focus()
@@ -119,6 +128,12 @@
 					return ''
 				}
 				this.toAutocomplete = convertToCase(getValue(), value)
+			},
+			hideDataList() {
+				this.isDataListShown = false
+			},
+			showDataList() {
+				this.isDataListShown = true
 			}
 		},
 		expose: ['focus', 'clear']
@@ -154,9 +169,12 @@
 	   	@keyup="onKeyup"
 	   	@keydown="onKeydown"
 		@input="onInput"
+		@focus="!isNotMobile && hideDataList()"
+		@blur="showDataList"
 		:style="{ color: $props.color }"
 		:placeholder="placeholder"
-		list="autocomplete-list"
+		autocomplete="off"
+		:list="isDataListShown ? 'autocomplete-list' : ''"
 		/>
 	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
 	   	:style="{ color: $props.color }">
