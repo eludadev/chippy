@@ -1,12 +1,10 @@
 <script>
   import InputArea from '@/components/InputArea.vue'
-  import ChipItem from '@/components/ChipItem.vue'
   import ChipList from '@/components/ChipList.vue'
 
   export default {
     components: {
       InputArea,
-      ChipItem,
       ChipList
     },
     data() {
@@ -36,7 +34,7 @@
         this.chips = []
         this.$refs.input.focus()
       },
-      deleteChip(index) {
+      onDeleteChip(index) {
         this.chips.splice(index, 1)
         this.$refs.input.focus()
       }
@@ -58,7 +56,7 @@
 
 <template>
   <div class="flex flex-col gap-2 mx-8">
-    <input-area class="grow" ref="input"
+    <input-area ref="input"
     @submit="handleSubmit" 
     :color="color" 
     :is-warning="chips.length >= maxChips && userInput.length >= 0" 
@@ -66,14 +64,7 @@
     :autocomplete="autocomplete" 
     v-model="userInput"
     />
-    <chip-list class="flex flex-wrap gap-1">
-        <chip-item v-for="({color, value}, index) in chips" :color="color" :key="value" @close="deleteChip(index)">
-          {{ value }}
-        </chip-item>
-        <chip-item v-if="userInput" class="opacity-50" :color="color" :show-close="false">
-          {{ userInput }}
-        </chip-item>
-    </chip-list>
+    <chip-list :chips="chips" ref="chipList" @delete="onDeleteChip"/>
     <div class="flex gap-1 items-center">
       <small :class="chips.length === maxChips ? 'text-red-500' : chips.length >= maxChips * 0.8 ? 'text-yellow-500' : 'text-stone-50'">max: {{ chips.length }}/{{ maxChips }}</small>
       <button class="underline text-stone-50 text-sm" title="Clear all" @click="clearAll">clear</button>
