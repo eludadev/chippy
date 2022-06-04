@@ -3,3 +3,5 @@ yarn.lock
 .firebaserc
 firebase-debug.log
 .github
+dist
+.firebase
