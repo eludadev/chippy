@@ -29,7 +29,7 @@
 				return {
 					submitKeys,
 					autocompleteKeys,
-					isNotMobile: smAndLarger
+					smAndLarger
 				}
 		},
 		mounted() {
@@ -169,12 +169,11 @@
 	   	@keyup="onKeyup"
 	   	@keydown="onKeydown"
 		@input="onInput"
-		@focus="!isNotMobile && hideDataList()"
 		@blur="showDataList"
 		:style="{ color: $props.color }"
 		:placeholder="placeholder"
 		autocomplete="off"
-		:list="isDataListShown ? 'autocomplete-list' : ''"
+		:list="!smAndLarger && isDataListShown ? 'autocomplete-list' : ''"
 		/>
 	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
 	   	:style="{ color: $props.color }">
@@ -182,6 +181,7 @@
 	   		<span>{{ toAutocomplete }}</span>
 	   	</div>
 
+		<!-- Datalist is hidden on mobile (smAndLarger) -->
 	   	<datalist id="autocomplete-list">
 	   		<option :value="item" v-for="item in $props.autocomplete"/>
 	   	</datalist>

@@ -10,3 +10,5 @@
 - [x] We should add **autocomplete** :pencil:
 
 - [ ] Use Vue **Testing** to make it more stable. 👨‍🔬️
+
+- [ ] `<datalist>` is removed when the device is mobile, so we should provide mobile users with a substitute.
