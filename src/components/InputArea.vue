@@ -18,96 +18,121 @@
 				const visibleKeys = [',', ';']
 				const submitKeys = [...whitespaceKeys, ...visibleKeys]
 
-				const cancelAutocompleteKey = 'Backspace'
 				const autocompleteKeys = [...submitKeys]
 
 				return {
 					submitKeys,
-					autocompleteKeys,
-					cancelAutocompleteKey
+					autocompleteKeys
 				}
 		},
 		methods: {
 			onKeyup(event) {
+				// We only want to check the last character
+				const lastChar = event.target.value.slice(-1)
 				const key = event.key
 
-				let value = this.userInput.trim()
-				this.$emit('typing', value)
-
-				if (this.submitKeys.includes(key)) {
+				if (this.submitKeys.includes(lastChar) || this.submitKeys.includes(key)) {
+					// Remove last visible submit character (',', ' ', ...) if it exists
+					if (this.submitKeys.includes(lastChar)) {
+						this.userInput = this.userInput.slice(0,-1)
+					}
 					// Only submit if value is not empty
-					if (value.length) {
-						this.$emit('submit', value)
+					if (this.userInput.length) {
+						this.autocompleteInput()
+						this.$emit('submit', toConsistentCase(this.userInput))
 					} else {
 						this.userInput = ''
 					}
 				}
 			},
 			onKeydown(event) {
+				// We only want to check the last character
+				const lastChar = event.target.value.slice(-1)
 				const key = event.key
-	
-				if (this.autocompleteKeys.includes(key)) {
+
+				if (this.autocompleteKeys.includes(lastChar) || this.autocompleteKeys.includes(key)) {
 					event.preventDefault()
 					if (this.toAutocomplete) {
 						this.autocompleteInput()
 						this.$emit('submit', this.userInput)
 					}
 				}
-				else if (this.cancelAutocompleteKey === key) {
-					if (this.toAutocomplete) event.preventDefault()
-					this.clearAutocomplete()
-				}
-
 			},
 			onInput(event) {
-				if (event.inputType !== 'deleteContentBackward') {
-					this.updateAutocomplete()
+				let value = event.target.value.trimLeft()
+				this.$emit('typing', value)
+
+				const pressedBackspace = value === this.userInput.slice(0,-1)
+
+				if (!pressedBackspace) {
+					this.updateAutocomplete(value.trimRight())
+				} else {
+					// Only clear autocomplete if caret was at end of input field
+					const caretPosition = event.target.selectionStart
+					if (caretPosition === value.length) {
+						// If first time hitting backspace, return the deleted character
+						// Next time hitting backspace, autocomplete will be gone and you
+						// can delete the character
+						if (this.toAutocomplete) {
+							value = this.userInput
+							this.clearAutocomplete()
+						}
+					} else {
+						this.updateAutocomplete(value)
+					}
 				}
+				this.userInput = value
+				this.$refs.input.value = this.userInput
 			},
 			focus() {
 				this.$refs.input.focus()
 			},
 			clear() {
-				this.userInput = ''
+				this.$refs.input.value = ''
 				this.$refs.input.focus()
+				this.userInput = ''
 			},
 			autocompleteInput() {
-				this.userInput = toConsistentCase(this.userInput + this.toAutocomplete)
+				this.userInput = toConsistentCase(this.userInput.trimRight() + this.toAutocomplete)
 				this.clearAutocomplete()
 			},
 			clearAutocomplete() {
 				this.toAutocomplete = ''
 			},
-			updateAutocomplete() {
+			updateAutocomplete(value) {
 				const getValue = () => {
 					// Check if autocomplete is enabled
 					if (!this.$props.autocomplete) return ''
 					// If input is empty, then all autocomplete candidates match!
-					if (!this.userInput.length) return ''
+					if (!value.length) return ''
 
 					for (const candidate of this.$props.autocomplete) {
-						if (candidate.toLowerCase().startsWith(this.userInput.toLowerCase())) {
+						if (candidate.toLowerCase().startsWith(value.toLowerCase())) {
 							// Return the last part that can be autocompleted
 							// 'co|depen' -> 'depen'
-							return candidate.slice(this.userInput.length)
+							return candidate.slice(value.length)
 						}
 					}
 					return ''
 				}
-				this.toAutocomplete = convertToCase(getValue(), this.userInput)
+				this.toAutocomplete = convertToCase(getValue(), value)
 			}
 		},
 		expose: ['focus', 'clear']
 	}
 
 	function toConsistentCase(str) {
-		const isLower = str.length ? isLowerCase(str[0]) : false
-
-		return convertToCase(str, str[0])
+		if (str.length) {
+			const source = str.slice(-1)
+			return convertToCase(str, source)
+		}
+		else {
+			return ''
+		}
 	}
 
 	function convertToCase(value, source) {
-		const isLower = source.length ? isLowerCase(source[0]) : false
+		const isLower = source.length ? isLowerCase(source.slice(-1)) : false
 
 		return isLower ? value.toLowerCase() : value.toUpperCase()
 	}
@@ -123,7 +148,6 @@
 				    focus:outline-0 focus:filter focus:brightness-110',
 				    {'ring-2 ring-red-800': $props.isWarning}]"
 	   	ref="input"
-		v-model="userInput"
 	   	@keyup="onKeyup"
 	   	@keydown="onKeydown"
 		@input="onInput"
