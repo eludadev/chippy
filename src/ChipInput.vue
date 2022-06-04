@@ -59,7 +59,7 @@
     <input-area ref="input"
     @submit="handleSubmit" 
     :color="color" 
-    :is-warning="chips.length >= maxChips && userInput.length >= 0" 
+    :is-warning="chips.length >= maxChips && userInput.length > 0" 
     :placeholder="placeholder" 
     :autocomplete="autocomplete" 
     v-model="userInput"
