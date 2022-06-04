@@ -15,7 +15,7 @@
 
         chips: [],
         color: '#fff',
-        typingChip: ''
+        userInput: ''
       }
     },
     mounted() {
@@ -29,15 +29,9 @@
         this.chips.push({value, color: this.color})
         this.color = generateRandomColor()
         this.$refs.input.clear()
-        this.typingChip = ''
-      },
-      handleTyping(value) {
-        this.typingChip = value
       },
       clearAll() {
         this.chips = []
-        this.$refs.input.clear()
-        this.typingChip = ''
         this.$refs.input.focus()
       },
       deleteChip(index) {
@@ -64,11 +58,11 @@
   <div class="flex flex-col gap-2 mx-8">
     <input-area class="grow" ref="input"
     @submit="handleSubmit" 
-    @typing="handleTyping" 
     :color="color" 
-    :is-warning="chips.length >= maxChips && typingChip !== ''" 
+    :is-warning="chips.length >= maxChips && userInput.length >= 0" 
     :placeholder="placeholder" 
     :autocomplete="autocomplete" 
+    v-model="userInput"
     />
     <ul class="flex flex-wrap gap-1">
       <li v-for="({color, value}, index) in chips">
@@ -77,8 +71,8 @@
         </chip-item>
       </li>
       <li>
-        <chip-item v-if="typingChip" class="opacity-50" :color="color" :show-close="false">
-          {{ typingChip }}
+        <chip-item v-if="userInput" class="opacity-50" :color="color" :show-close="false">
+          {{ userInput }}
         </chip-item>
       </li>
     </ul>

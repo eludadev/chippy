@@ -6,9 +6,10 @@
 			autocomplete: { type: Array, default: [] },
 			isWarning: { type: Boolean, default: false },
 			color: { type: String, default: '#fff' },
-			placeholder: { type: String, default: '' }
+			placeholder: { type: String, default: '' },
+			modelValue: { type: String, default: '' }
 		},
-		emits: ['submit', 'typing'],
+		emits: ['submit', 'update:modelValue'],
 		data() {
 			return {
 				toAutocomplete: '',
@@ -70,7 +71,6 @@
 			},
 			onInput(event) {
 				let value = event.target.value.trimLeft()
-				this.$emit('typing', value)
 
 				const pressedBackspace = value === this.userInput.slice(0,-1)
 
@@ -94,6 +94,8 @@
 				this.userInput = value
 				this.$refs.input.value = this.userInput
 
+				this.$emit('update:modelValue', this.userInput)
+
 				this.hideDataList()
 			},
 			focus() {
@@ -103,6 +105,7 @@
 				this.$refs.input.value = ''
 				this.$refs.input.focus()
 				this.userInput = ''
+				this.$emit('update:modelValue', this.userInput)
 			},
 			autocompleteInput() {
 				this.userInput = toConsistentCase(this.userInput.trimRight() + this.toAutocomplete)
@@ -174,6 +177,7 @@
 		:placeholder="placeholder"
 		autocomplete="off"
 		:list="!smAndLarger && isDataListShown ? 'autocomplete-list' : ''"
+		:value="modelValue"
 		/>
 	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
 	   	:style="{ color: $props.color }">
