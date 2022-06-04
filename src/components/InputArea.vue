@@ -48,8 +48,7 @@
 					}
 					// Only submit if value is not empty
 					if (this.userInput.length) {
-						this.autocompleteInput()
-						this.$emit('submit', this.userInput)
+						this.submit()
 					} else {
 						this.userInput = ''
 					}
@@ -63,8 +62,7 @@
 				if (this.autocompleteKeys.includes(lastChar) || this.autocompleteKeys.includes(key)) {
 					event.preventDefault()
 					if (this.toAutocomplete) {
-						this.autocompleteInput()
-						this.$emit('submit', this.userInput)
+						this.submit()
 					}
 				}
 			},
@@ -90,7 +88,7 @@
 						this.updateAutocomplete(value)
 					}
 				}
-				this.userInput = value.toLowerCase()
+				this.userInput = value
 				this.$refs.input.value = this.userInput
 
 				this.$emit('update:modelValue', this.userInput)
@@ -127,7 +125,11 @@
 					}
 					return ''
 				}
-				this.toAutocomplete = getValue().toLowerCase()
+				this.toAutocomplete = convertToCase(getValue(), value)
+			},
+			submit(autocomplete) {
+				this.autocompleteInput()
+				this.$emit('submit', toConsistentCase(this.userInput))
 			}
 		},
 		computed: {
@@ -136,6 +138,23 @@
 			}
 		},
 		expose: ['focus', 'clear']
+	}
+
+	function toConsistentCase(str) {
+		if (str.length) {
+			const source = str.slice(-1)
+			return convertToCase(str, source)
+		}
+		else {
+			return ''
+		}
+	}
+	function convertToCase(value, source) {
+		const isLower = source.length ? isLowerCase(source.slice(-1)) : false
+		return isLower ? value.toLowerCase() : value.toUpperCase()
+	}
+	function isLowerCase(str) {
+		return str === str.toLowerCase()
 	}
 </script>
 
