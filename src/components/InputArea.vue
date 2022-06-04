@@ -127,7 +127,6 @@
 	   	@keyup="onKeyup"
 	   	@keydown="onKeydown"
 		@input="onInput"
-		@click="clearAutocomplete() && this.focus()"
 		:style="{ color: $props.color }"
 		:placeholder="placeholder"
 		/>
