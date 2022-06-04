@@ -83,7 +83,7 @@
       </li>
     </ul>
     <div class="flex gap-1 items-center">
-      <small :class="chips.length >= maxChips * 0.8 ? 'text-red-500' : 'text-stone-50'">max: {{ chips.length }}/{{ maxChips }}</small>
+      <small :class="chips.length === maxChips ? 'text-red-500' : chips.length >= maxChips * 0.8 ? 'text-yellow-500' : 'text-stone-50'">max: {{ chips.length }}/{{ maxChips }}</small>
       <button class="underline text-stone-50 text-sm" title="Clear all" @click="clearAll">clear</button>
     </div>
   </div>
