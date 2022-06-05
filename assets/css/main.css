@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('@/assets/fonts/Inter-Light.ttf') format('truetype');
+}
 
 @tailwind base;
 @tailwind utilities;
