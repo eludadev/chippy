@@ -1,85 +1,81 @@
-<script>
+<script setup>
+  import { ref, reactive, onMounted } from 'vue'
   import InputArea from '@/components/InputArea.vue'
   import ChipList from '@/components/ChipList.vue'
+  import { generateRandomColor } from '@/helpers/colors.js'
 
-  export default {
-    components: {
-      InputArea,
-      ChipList
-    },
-    setup() {
-      useHead({
-        title: 'Chippy',
-        meta: [
-          { name: 'description', content: 'Add this chip input component to your website, at no cost.' },
-          { name: 'og:image', content: '/cover.png' },
-          { name: 'twitter:image', content: '/cover.png' }
-        ],
-        link: [
-          { rel: 'icon', content: '/favicon.ico' }
-        ]
-      })
-    },
-    data() {
-      return {
-        autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove'],
-        placeholder: 'codepen',
-        maxChips: 10,
+  const config = reactive({
+      autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove'],
+      placeholder: 'codepen',
+      maxChips: 10
+  })
 
-        chips: [],
-        color: '#fff',
-        userInput: ''
-      }
-    },
-    mounted() {
-      this.$refs.input.focus()
-    },
-    methods: {
-      handleSubmit(value) {
-        // Don't add the chip if max was reached
-        if (this.chips.length >= this.maxChips) return 
+  const state = reactive({
+      chips: [],
+      color: '#fff',
+      userInput: ''
+  })
 
-        this.chips.push({value, color: this.color})
-        this.color = generateRandomColor()
-        this.$refs.input.clear()
-      },
-      clearAll() {
-        this.chips = []
-        this.$refs.input.focus()
-      },
-      onDeleteChip(index) {
-        this.chips.splice(index, 1)
-        this.$refs.input.focus()
-      }
-    }
+  const input = ref(null)
+
+  // Document SEO meta-tags.
+  useHead({
+    title: 'Chippy',
+    meta: [
+      { name: 'description', content: 'Add this chip input component to your website, at no cost.' },
+      { name: 'og:image', content: '/cover.png' },
+      { name: 'twitter:image', content: '/cover.png' }
+    ],
+    link: [
+      { rel: 'icon', content: '/favicon.ico' }
+    ]
+  })
+
+  onMounted(() => {    
+    focusInput()
+  })
+
+  function handleSubmit(value) {
+    // Don't add the chip if max was reached
+    if (state.chips.length >= config.maxChips) return 
+
+    // Add the chip
+    state.chips.push({value, color: state.color})
+
+    // Prepare next chip
+    state.color = generateRandomColor()
+    clearInput()
   }
 
-  function generateRandomColor() {
-    const randomInt = (min, max) => {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const h = randomInt(0, 360)
-    const s = randomInt(42, 98)
-    const l = randomInt(40, 90)
-    
-    return `hsl(${h},${s}%,${l}%)`
+  function clearAll() {
+    state.chips = []
+    focusInput()
   }
+
+  function onDeleteChip(index) {
+    state.chips.splice(index, 1)
+    focusInput()
+  }
+
+
+  const focusInput = () => input.value.focus()
+  const clearInput = () => input.value.clear()
 </script>
 
 <template>
   <div class="flex flex-col gap-2 mx-8">
-    <input-area ref="input"
+    <InputArea 
+    ref="input"
     @submit="handleSubmit" 
-    :color="color" 
-    :is-warning="chips.length >= maxChips && userInput.length > 0" 
-    :placeholder="placeholder" 
-    :autocomplete="autocomplete" 
-    v-model="userInput"
+    :color="state.color" 
+    :is-warning="state.chips.length >= config.maxChips && state.userInput.length > 0" 
+    :placeholder="config.placeholder" 
+    :autocomplete="config.autocomplete" 
+    v-model="state.userInput"
     />
-    <chip-list :chips="chips" ref="chipList" @delete="onDeleteChip"/>
+    <ChipList :chips="state.chips" ref="chipList" @delete="onDeleteChip"/>
     <div class="flex gap-1 items-center">
-      <small :class="chips.length === maxChips ? 'text-red-500' : chips.length >= maxChips * 0.8 ? 'text-yellow-500' : 'text-stone-50'">max: {{ chips.length }}/{{ maxChips }}</small>
+      <small :class="state.chips.length === config.maxChips ? 'text-red-500' : state.chips.length >= config.maxChips * 0.8 ? 'text-yellow-500' : 'text-stone-50'">max: {{ state.chips.length }}/{{ config.maxChips }}</small>
       <button class="underline text-stone-50 text-sm" title="Clear all" @click="clearAll">clear</button>
     </div>
   </div>
