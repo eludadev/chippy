@@ -7,6 +7,19 @@
       InputArea,
       ChipList
     },
+    setup() {
+      useHead({
+        title: 'Chippy',
+        meta: [
+          { name: 'description', content: 'Add this chip input component to your website, at no cost.' },
+          { name: 'og:image', content: '/cover.png' },
+          { name: 'twitter:image', content: '/cover.png' }
+        ],
+        link: [
+          { rel: 'icon', content: '/favicon.ico' }
+        ]
+      })
+    },
     data() {
       return {
         autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove'],
