@@ -1,4 +1,4 @@
-![](./demo.webp)
+![](./assets/demo.webp)
 
 ## Features :pen:
 
