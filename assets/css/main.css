@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap');
+
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+html {
+	@apply h-full;
+}
+
+body {
+	@apply bg-stone-900 min-h-full grid place-items-center;
+}
+
+#__nuxt {
+	@apply w-full;
+}

@@ -1,8 +1,9 @@
 node_modules
 yarn.lock
-.firebaserc
-firebase-debug.log
-.github
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.env
 dist
-.firebase
-firebase.json
