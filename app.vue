@@ -49,7 +49,7 @@
   <main class="mx-2">
     <ChipInput 
     ref="input"
-    @delete-chip="onDeleteChip"
+    @delete:chip="onDeleteChip"
     :autocomplete="config.autocomplete"
     :placeholder="config.placeholder"
     :max-chips="config.maxChips"

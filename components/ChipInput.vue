@@ -19,7 +19,7 @@
     }
   })
 
-  const emit = defineEmits(['delete-chip'])
+  const emit = defineEmits(['delete:chip'])
 
   const state = reactive({
       chips: [],
@@ -45,13 +45,18 @@
     clear()
   }
 
-  function clearAll() {
-    state.chips = []
-  }
-
   function onDeleteChip(index) {
     state.chips.splice(index, 1)
-    emit('delete-chip')
+    emit('delete:chip')
+  }
+
+  function onDelete() {
+    state.chips.pop()
+    emit('delete:chip')
+  }
+
+  function clearAll() {
+    state.chips = []
   }
 
   const focus = () => input.value.focus()
@@ -74,7 +79,8 @@
     ref="input"
     id="chips-input"
     class="order-2 grow basis-0"
-    @submit="onSubmit" 
+    @submit="onSubmit"
+    @delete="onDelete"
     :color="state.color"  
     :placeholder="props.placeholder" 
     :autocomplete="props.autocomplete" 

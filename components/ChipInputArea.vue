@@ -29,6 +29,9 @@
 		submit: {
 			value: String
 		},
+		delete: {
+			value: null
+		},
 		'update:modelValue': {
 			value: String
 		}
@@ -87,6 +90,10 @@
 			if (state.toAutocomplete) {
 				submit()
 			}
+		}
+		// When the user hits backspace and input is empty, send event to delete last chip
+		else if (key === 'Backspace' && state.userInput.length === 0) {
+			emit('delete')
 		}
 	}
 
