@@ -4,13 +4,13 @@
 	import { toConsistentCase, convertToCase } from '@/helpers/text.js'
 
 	const props = defineProps({
+		id: {
+			type: String,
+			default: ''
+		},
 		autocomplete: { 
 			type: Array, 
 			default: [] 
-		},
-		isWarning: { 
-			type: Boolean, 
-			default: false 
 		},
 		color: { 
 			type: String, 
@@ -173,12 +173,12 @@
 </script>
 
 <template>
-	<form class="relative" id="chips-form" @submit.prevent>
-		<label for="chips-form" class="sr-only">Input your tags</label>
-		<input :class="['bg-stone-800 text-stone-50 px-2 py-1\
-				    focus:outline-0 focus:filter focus:brightness-110',
-				    {'ring-2 ring-red-800': props.isWarning}]"
+	<div class="relative overflow-hidden w-full h-full">
+		<input 
+		class="bg-transparent w-full h-full text-stone-50 px-2 py-1
+		focus:outline-0 focus:filter focus:brightness-110"
 	   	ref="input"
+	   	:id="props.id"
 	   	@keyup="onKeyup"
 	   	@keydown="onKeydown"
 		@input="onInput"
@@ -188,7 +188,7 @@
 		:list="smAndLarger && 'autocomplete-list'"
 		:value="props.modelValue"
 		/>
-	   	<div class="absolute top-1 left-2 filter brightness-50 pointer-events-none"
+	   	<div class="absolute top-[2px] left-2 filter brightness-50 pointer-events-none"
 	   	:style="{ color: props.color }">
 	   		<span class="opacity-0">{{ state.userInput }}</span>
 	   		<span>{{ state.toAutocomplete }}</span>
@@ -198,5 +198,5 @@
 	   	<datalist id="autocomplete-list">
 	   		<option :value="item" v-for="item in datalist"/>
 	   	</datalist>
-	</form>
+	</div>
 </template>

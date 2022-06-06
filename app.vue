@@ -1,22 +1,12 @@
 <script setup>
-  import { ref, reactive, onMounted } from 'vue'
-  import InputArea from '@/components/InputArea.vue'
-  import ChipList from '@/components/ChipList.vue'
-  import { generateRandomColor } from '@/helpers/colors.js'
+  import { ref, computed, onMounted } from 'vue'
+  import ChipInput from '@/components/ChipInput.vue'
 
   const config = reactive({
-      autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove'],
-      placeholder: 'codepen',
-      maxChips: 10
+    autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove'],
+    placeholder: 'codepen',
+    maxChips: 7
   })
-
-  const state = reactive({
-      chips: [],
-      color: '#fff',
-      userInput: ''
-  })
-
-  const input = ref(null)
 
   // Document SEO meta-tags.
   useHead({
@@ -31,52 +21,43 @@
     ]
   })
 
+  const input = ref(null)
+
   onMounted(() => {    
     focusInput()
   })
 
-  function handleSubmit(value) {
-    // Don't add the chip if max was reached
-    if (state.chips.length >= config.maxChips) return 
-
-    // Add the chip
-    state.chips.push({value, color: state.color})
-
-    // Prepare next chip
-    state.color = generateRandomColor()
-    clearInput()
-  }
+  const chipsCount = computed(() => {
+    return input.value && input.value.getChips().length
+  })
 
   function clearAll() {
-    state.chips = []
+    clearChips()
     focusInput()
   }
 
-  function onDeleteChip(index) {
-    state.chips.splice(index, 1)
+  function onDeleteChip() {
     focusInput()
   }
-
 
   const focusInput = () => input.value.focus()
   const clearInput = () => input.value.clear()
+  const clearChips = () => input.value.clearChips()
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 mx-8">
-    <InputArea 
+  <main class="mx-2">
+    <ChipInput 
     ref="input"
-    @submit="handleSubmit" 
-    :color="state.color" 
-    :is-warning="state.chips.length >= config.maxChips && state.userInput.length > 0" 
-    :placeholder="config.placeholder" 
-    :autocomplete="config.autocomplete" 
-    v-model="state.userInput"
+    @delete-chip="onDeleteChip"
+    :autocomplete="config.autocomplete"
+    :placeholder="config.placeholder"
+    :max-chips="config.maxChips"
     />
-    <ChipList :chips="state.chips" ref="chipList" @delete="onDeleteChip"/>
-    <div class="flex gap-1 items-center">
-      <small :class="state.chips.length === config.maxChips ? 'text-red-500' : state.chips.length >= config.maxChips * 0.8 ? 'text-yellow-500' : 'text-stone-50'">max: {{ state.chips.length }}/{{ config.maxChips }}</small>
+    
+    <div class="mt-1 space-x-1">
+      <small :class="chipsCount === config.maxChips ? 'text-red-500' : chipsCount >= config.maxChips * 0.8 ? 'text-yellow-500' : 'text-stone-50'">max: {{ chipsCount }}/{{ config.maxChips }}</small>
       <button class="underline text-stone-50 text-sm" title="Clear all" @click="clearAll">clear</button>
     </div>
-  </div>
+  </main>
 </template>
