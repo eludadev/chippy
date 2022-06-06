@@ -33,6 +33,10 @@
     return props.maxChips > 0 && state.chips.length >= props.maxChips && state.userInput.length > 0
   })
 
+  const isOverflow = computed(() => {
+    return input.value && input.value.getIsOverflow()
+  })
+
   function onSubmit(value) {
     // Don't add the chip if max was reached
     if (props.maxChips > 0 && state.chips.length >= props.maxChips) return 
@@ -71,21 +75,23 @@
 
 <template>
   <form
-  :class="['bg-stone-800 px-2 py-2 flex flex-wrap items-center rounded',
+  :class="['bg-stone-800 px-2 py-2 rounded overflow-hidden',
   { 'outline outline-2 outline-red-500': isWarning }]"
   @submit.prevent>
     <label for="chips-input" class="sr-only">Input your tags</label>
-    <ChipInputArea
-    ref="input"
-    id="chips-input"
-    class="order-2 grow basis-0"
-    @submit="onSubmit"
-    @delete="onDelete"
-    :color="state.color"  
-    :placeholder="props.placeholder" 
-    :autocomplete="props.autocomplete" 
-    v-model="state.userInput"
-    />
-    <ChipList :chips="state.chips" ref="chipList" @delete="onDeleteChip"/>
+    <ChipList :chips="state.chips" :input-is-overflow="isOverflow" ref="chipList" @delete="onDeleteChip">
+      <template #input>
+        <ChipInputArea
+        ref="input"
+        id="chips-input"
+        @submit="onSubmit"
+        @delete="onDelete"
+        :color="state.color"  
+        :placeholder="props.placeholder" 
+        :autocomplete="props.autocomplete" 
+        v-model="state.userInput"
+        />
+      </template>
+    </ChipList>
   </form>
 </template>

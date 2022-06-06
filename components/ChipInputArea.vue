@@ -1,6 +1,6 @@
 <script setup>
-	import { ref, reactive, computed, onMounted } from 'vue'
-	import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+	import { ref, reactive, watch, computed, onMounted } from 'vue'
+	import { useDebounceFn, breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 	import { toConsistentCase, convertToCase } from '@/helpers/text.js'
 
 	const props = defineProps({
@@ -45,12 +45,17 @@
 		toAutocomplete: '',
 		userInput: ''
 	})
+	const overflow = reactive({
+		widthPriorToOverflow: 0,
+		isOverflow: false
+	})
 
 	const breakpoints = useBreakpoints(breakpointsTailwind)
 	const smAndLarger = breakpoints.greater('sm')
 
 	onMounted(() => {
 		state.autocompletePossibilities = props.autocomplete
+		overflow.widthPriorToOverflow = input.value.offsetWidth
 	})
 
 
@@ -131,9 +136,10 @@
 
 	function clear() {
 		input.value.value = ''
-		focus()
 		state.userInput = ''
 		emit('update:modelValue', state.userInput)
+		
+		focus()
 	}
 
 	function autocompleteInput() {
@@ -167,15 +173,41 @@
 	function submit(autocomplete) {
 		autocompleteInput()
 		emit('submit', toConsistentCase(state.userInput))
+		toggleOverflow(false)
 	}
 		
 	const datalist = computed(() => {
-		return props.autocomplete.filter(a => a.toLowerCase().startsWith(state.userInput.toLowerCase()))
+		return props.autocomplete
+		.filter(a => a.toLowerCase().startsWith(state.userInput.toLowerCase()))
 	})
+
+
+	watch(() => state.userInput, updateOverflow)
+
+	function updateOverflow() {
+		const fullText = state.userInput.trimRight() + state.toAutocomplete
+		const fontSize = input.value.computedStyleMap().get('font-size').value
+		if (input.value && overflow.widthPriorToOverflow/fullText.length < fontSize) {
+			toggleOverflowDebounce(true)
+		} else if (input.value) {
+			toggleOverflowDebounce(false)
+			overflow.widthPriorToOverflow = input.value.offsetWidth
+		}
+	}
+
+	function toggleOverflow(newState) {
+		overflow.isOverflow = newState
+	}
+
+	// We don't want the overflow state to abruptly change (causes a janky animation).
+	const toggleOverflowDebounce = useDebounceFn((newState) => {
+		toggleOverflow(newState)
+	}, 400)
 
 	defineExpose({
 		clear,
-		focus
+		focus,
+		getIsOverflow: () => overflow.isOverflow
 	})
 </script>
 

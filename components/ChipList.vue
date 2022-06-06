@@ -5,6 +5,10 @@
   		chips: {
   			type: Array,
   			required: true
+  		},
+  		inputIsOverflow: {
+  			type: Boolean,
+  			default: false
   		}
   	})
 
@@ -31,11 +35,13 @@
 	class="flex flex-wrap gap-1">
 		<li v-for="({color, value}, index) in props.chips"
 		:key="value">
-			<ChipItem :value="value" 
+			<ChipItem 
+			:value="value" 
 			:color="color" 
 			@delete="emit('delete', index)"
 			/>
 		</li>
+		<li :class="['basis-20 grow', {'basis-full':props.inputIsOverflow}]" :key="`USERINPUT`"><slot name="input"/></li>
 	</TransitionGroup>
 </template>
 
