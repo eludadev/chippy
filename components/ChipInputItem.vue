@@ -12,6 +12,13 @@
 		}
 	})
 
+	function onKeyDown(event) {
+		const key = event.key
+		if (key === 'Backspace') {
+			emit('delete')
+		}
+	}
+
 	const emit = defineEmits(['delete'])
 
 	const buttonTitle = computed(() => {
@@ -25,6 +32,7 @@
 	group" 
 	:style="{ backgroundColor: props.color }"
 	@click="emit('delete')"
+	@keydown="onKeyDown"
 	:title="buttonTitle">
 		<span class="block relative group-focus:-translate-x-1.5 group-hover:-translate-x-1.5 transition-transform">{{ props.value }}</span>
 		<svg class="w-4 h-4 fill-black absolute top-1/2 right-1.5

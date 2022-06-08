@@ -32,6 +32,7 @@
   })
 
   const input = ref(null)
+  const chipList = ref(null)
 
   const isWarning = computed(() => {
     return props.maxChips > 0 && state.chips.length >= props.maxChips && state.userInput.length > 0
@@ -46,7 +47,7 @@
     if (props.maxChips > 0 && state.chips.length >= props.maxChips) return 
 
     // Add the chip
-    state.chips.push({value, color: state.color})
+    state.chips.unshift({value, color: state.color})
 
     // Prepare next chip
     state.color = generateRandomColor()
@@ -58,8 +59,8 @@
     emit('delete:chip')
   }
 
-  function onDelete() {
-    state.chips.pop()
+  function onLastBackspace() {
+    chipList.value.focusLast() // Focus on last chip
     emit('delete:chip')
   }
 
@@ -100,7 +101,7 @@
         ref="input"
         id="chips-input"
         @submit="onSubmit"
-        @delete="onDelete"
+        @last-backspace="onLastBackspace"
         :color="state.color"  
         :placeholder="props.placeholder" 
         :autocomplete="props.autocomplete" 

@@ -29,7 +29,7 @@
 		submit: {
 			value: String
 		},
-		delete: {
+		'last-backspace': {
 			value: null
 		},
 		'update:modelValue': {
@@ -105,7 +105,7 @@
 		}
 
 		if (key === 'Backspace' && state.userInput.length === 0 && backspaceToDelete.keyupHappened) {
-			emit('delete')
+			emit('last-backspace')
 		}
 
 		backspaceToDelete.keyupHappened = false

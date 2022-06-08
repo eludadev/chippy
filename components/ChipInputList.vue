@@ -1,5 +1,8 @@
 <script setup>
+	import { ref, computed } from 'vue'
   	import ChipItem from '@/components/ChipInputItem.vue'
+
+  	const list = ref(null)
 
   	const props = defineProps({
   		chips: {
@@ -18,15 +21,28 @@
   		}
   	})
 
+  	function focusLast() {
+  		const container = list.value.$el
+  		const children = container.children
+  		if (children.length < 2) return
+  		const elem = list.value.$el.children[1]
+  		// Why use setTimeout: https://stackoverflow.com/questions/1096436/document-getelementbyidid-focus-is-not-working-for-firefox-or-chrome
+  		setTimeout(() => elem.querySelector('button').focus(), 0)
+  	}
+
 	function onBeforeLeave(el) {
 		const rect = el.getBoundingClientRect()
 		el.style.setProperty('--x', `${Math.round(rect.x)}px`)
 		el.style.setProperty('--y', `${Math.round(rect.y)}px`)
 	}
+
+	defineExpose({
+		focusLast
+	})
 </script>
 
 <template>
-	<TransitionGroup name="list" tag="ul"
+	<TransitionGroup name="list" ref="list" tag="ul"
 	@before-leave="onBeforeLeave"
 	role="listbox"
 	aria-label="chips"
@@ -37,13 +53,16 @@
 		<li 
 		id="input"
 		class="basis-20 grow order-2"
+		:style="{order: props.chips.length+1}"
 		:class="{'basis-full':props.inputIsOverflow}"
 		:key="`USERINPUT`">
 			<slot name="input"/>
 		</li>
+
 		<li 
 		role="listitem"
 		class="order-1"
+		:style="{order: props.chips.length-(index+1)}"
 		v-for="({color, value}, index) in props.chips"
 		:key="value">
 			<ChipItem 
