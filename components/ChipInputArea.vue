@@ -49,6 +49,9 @@
 		widthPriorToOverflow: 0,
 		isOverflow: false
 	})
+	const backspaceToDelete = reactive({
+		keyupHappened: false
+	})
 
 	const breakpoints = useBreakpoints(breakpointsTailwind)
 	const smAndLarger = breakpoints.greater('sm')
@@ -80,6 +83,10 @@
 				state.userInput = ''
 			}
 		}
+
+		// Do not delete a chip when the backspace key is being held, because what if
+		// the user's intentions were to just erase the input?
+		backspaceToDelete.keyupHappened = true
 	}
 
 
@@ -96,10 +103,12 @@
 				submit()
 			}
 		}
-		// When the user hits backspace and input is empty, send event to delete last chip
-		else if (key === 'Backspace' && state.userInput.length === 0) {
+
+		if (key === 'Backspace' && state.userInput.length === 0 && backspaceToDelete.keyupHappened) {
 			emit('delete')
 		}
+
+		backspaceToDelete.keyupHappened = false
 	}
 
 	function onInput(event) {
