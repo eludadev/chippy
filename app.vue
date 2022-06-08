@@ -10,6 +10,9 @@
 
   // Document SEO meta-tags.
   useHead({
+    htmlAttrs: {
+      lang: 'en'
+    },
     title: 'Chippy',
     meta: [
       { name: 'description', content: 'Add this chip input component to your website, at no cost.' },

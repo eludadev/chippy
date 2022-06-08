@@ -61,7 +61,8 @@
 	})
 
 
-	const whitespaceKeys = ['Enter', ' ', 'Tab']
+	// Tab was removed to allow keyboard users to navigate around the chips
+	const whitespaceKeys = ['Enter', ' ', /*'Tab'*/]
 	const visibleKeys = [',', ';']
 	const submitKeys = [...whitespaceKeys, ...visibleKeys]
 	
