@@ -33,7 +33,8 @@
 	aria-multiselectable="false" 
 	aria-live="polite"
 	class="flex flex-wrap gap-1">
-		<li v-for="({color, value}, index) in props.chips"
+		<li 
+		v-for="({color, value}, index) in props.chips"
 		:key="value">
 			<ChipItem 
 			:value="value" 
@@ -41,16 +42,27 @@
 			@delete="emit('delete', index)"
 			/>
 		</li>
-		<li :class="['basis-20 grow', {'basis-full':props.inputIsOverflow}]" :key="`USERINPUT`"><slot name="input"/></li>
+		<li 
+		id="input"
+		:class="['basis-20 grow', {'basis-full':props.inputIsOverflow}]"
+		:key="`USERINPUT`">
+			<slot name="input"/>
+		</li>
 	</TransitionGroup>
 </template>
 
-<style>
+<style scoped>
 /* Apply transition to moving elements */
 .list-move,
 .list-enter-active,
 .list-leave-active {
 	transition: all 0.2s ease;
+}
+
+/* Don't animate input element to avoid jittery movement when user starts typing just after
+creating a chip. */
+#input {
+	transition: none;
 }
 
 .list-enter-from,
