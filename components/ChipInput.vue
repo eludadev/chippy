@@ -1,7 +1,7 @@
 <script setup>
   import { ref, reactive, computed } from 'vue'
   import ChipInputArea from '@/components/ChipInputArea.vue'
-  import ChipList from '@/components/ChipList.vue'
+  import ChipList from '@/components/ChipInputList.vue'
   import { generateRandomColor } from '@/helpers/colors.js'
 
   const props = defineProps({

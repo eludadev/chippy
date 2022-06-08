@@ -1,5 +1,5 @@
 <script setup>
-  	import ChipItem from '@/components/ChipItem.vue'
+  	import ChipItem from '@/components/ChipInputItem.vue'
 
   	const props = defineProps({
   		chips: {
