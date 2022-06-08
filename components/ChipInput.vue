@@ -1,5 +1,6 @@
 <script setup>
   import { ref, reactive, computed } from 'vue'
+  import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
   import ChipInputArea from '@/components/ChipInputArea.vue'
   import ChipList from '@/components/ChipInputList.vue'
   import { generateRandomColor } from '@/helpers/colors.js'
@@ -59,9 +60,22 @@
     emit('delete:chip')
   }
 
+  const breakpoints = useBreakpoints(breakpointsTailwind)
+  const smAndLarger = breakpoints.greater('sm')
+
   function onLastBackspace() {
-    chipList.value.focusLast() // Focus on last chip
+    if (smAndLarger.value) {
+      chipList.value.focusLast() // Focus on last chip if on desktop
+    } else {
+      deleteLastChip() // Delete it if on mobile
+    }
     emit('delete:chip')
+  }
+
+  function deleteLastChip() {
+    // NOTE: since chips are reversed, the last chip is visually the first one,
+    // so we use shift()
+    state.chips.shift() 
   }
 
   function clearAll() {
