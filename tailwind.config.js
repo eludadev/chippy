@@ -1,11 +1,4 @@
 module.exports = {
-  content: ['./app.vue', './components/**/*.vue'],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif']
-      }
-    },
-  },
+  content: ['./lib/**/*.vue'],
   plugins: [require('@tailwindcss/forms')],
 }

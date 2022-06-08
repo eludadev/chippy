@@ -1,20 +1,35 @@
 {
-  "private": true,
+  "name": "chippy",
+  "version": "1.0.0",
+  "description": "Chippy, a tag-based input UI, for Vue.",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/my-lib.umd.js",
+  "module": "./dist/my-lib.es.js",
+  "repository": "git+https://github.com/eludadev/chippy.git",
+  "author": "eludadev",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/my-lib.es.js",
+      "require": "./dist/my-lib.umd.js"
+    }
+  },
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@vueuse/core": "^8.6.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.2",
+    "@vitejs/plugin-vue": "^2.3.3",
     "autoprefixer": "^10.4.7",
-    "nuxt": "3.0.0-rc.3",
+    "cssnano": "^5.1.11",
     "postcss": "^8.4.14",
-    "tailwindcss": "^3.0.24"
-  },
-  "dependencies": {
-    "@vueuse/core": "^8.6.0",
-    "cssnano": "^5.1.11"
+    "tailwindcss": "^3.0.24",
+    "vite": "^2.9.10",
+    "vue": "^3.2.37"
   }
 }

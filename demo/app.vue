@@ -1,6 +1,7 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
-  import ChipInput from '@/components/ChipInput.vue'
+  import ChipInput from '..'
+  import '../dist/style.css'
 
   const config = reactive({
     label: 'Tags',

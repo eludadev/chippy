@@ -1,6 +1,6 @@
 <script setup>
 	import { ref, computed } from 'vue'
-  	import ChipItem from '@/components/ChipInputItem.vue'
+  	import ChipItem from './ChipInputItem.vue'
 
   	const list = ref(null)
 

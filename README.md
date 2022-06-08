@@ -1,14 +1,15 @@
-[![](./media/demo.webp)](https://chippy-liart.vercel.app)
+## How to Use
 
-## Features :pen:
+```js
+import Chippy from 'chippy'
+import 'chippy/lib/style.css'
+```
 
-- Choose your own **autocomplete** words!
-- Set a **maximum** number of chips!
-
-## Roadmap :car:
-
-- [x] We should add **autocomplete** :pencil:
-
-- [ ] Use Vue **Testing** to make it more stable. 👨‍🔬️
-
-- [ ] `<datalist>` is removed when the device is mobile, so we should provide mobile users with a substitute.
+```html
+<ChipInput
+:autocomplete="['vue', 'html', 'css', 'codepen']"
+:label="'Tags:'"
+:placeholder="'codepen'"
+:max-chips="7"
+/>
+```

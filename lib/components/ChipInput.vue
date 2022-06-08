@@ -1,9 +1,9 @@
 <script setup>
   import { ref, reactive, computed } from 'vue'
   import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-  import ChipInputArea from '@/components/ChipInputArea.vue'
-  import ChipList from '@/components/ChipInputList.vue'
-  import { generateRandomColor } from '@/helpers/colors.js'
+  import ChipInputArea from './ChipInputArea.vue'
+  import ChipList from './ChipInputList.vue'
+  import { generateRandomColor } from '../utils/colors.js'
 
   const props = defineProps({
     autocomplete: {

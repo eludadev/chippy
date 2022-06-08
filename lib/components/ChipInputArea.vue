@@ -1,7 +1,7 @@
 <script setup>
 	import { ref, reactive, watch, computed, onMounted } from 'vue'
 	import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-	import { toConsistentCase, convertToCase } from '@/helpers/text.js'
+	import { toConsistentCase, convertToCase } from '../utils/text.js'
 
 	const props = defineProps({
 		id: {
