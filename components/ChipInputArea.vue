@@ -1,6 +1,6 @@
 <script setup>
 	import { ref, reactive, watch, computed, onMounted } from 'vue'
-	import { useDebounceFn, breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+	import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 	import { toConsistentCase, convertToCase } from '@/helpers/text.js'
 
 	const props = defineProps({
@@ -46,7 +46,6 @@
 		userInput: ''
 	})
 	const overflow = reactive({
-		widthPriorToOverflow: 0,
 		isOverflow: false
 	})
 	const backspaceToDelete = reactive({
@@ -136,6 +135,10 @@
 		state.userInput = value
 		input.value.value = state.userInput
 
+		if (!state.userInput.length) {
+			overflow.isOverflow = false
+		}
+
 		emit('update:modelValue', state.userInput)
 	}
 
@@ -182,7 +185,7 @@
 	function submit(autocomplete) {
 		autocompleteInput()
 		emit('submit', toConsistentCase(state.userInput))
-		toggleOverflow(false)
+		overflow.isOverflow = false
 	}
 		
 	const datalist = computed(() => {
@@ -196,22 +199,11 @@
 	function updateOverflow() {
 		const fullText = state.userInput.trimRight() + state.toAutocomplete
 		const fontSize = input.value.computedStyleMap().get('font-size').value
-		if (input.value && overflow.widthPriorToOverflow/fullText.length < fontSize) {
-			toggleOverflowDebounce(true)
-		} else if (input.value) {
-			toggleOverflowDebounce(false)
-			overflow.widthPriorToOverflow = input.value.offsetWidth
+		const width = input.value.offsetWidth
+		if (input.value && width/fullText.length < fontSize) {
+			overflow.isOverflow = true
 		}
 	}
-
-	function toggleOverflow(newState) {
-		overflow.isOverflow = newState
-	}
-
-	// We don't want the overflow state to abruptly change (causes a janky animation).
-	const toggleOverflowDebounce = useDebounceFn((newState) => {
-		toggleOverflow(newState)
-	}, 400)
 
 	defineExpose({
 		clear,
