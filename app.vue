@@ -3,7 +3,7 @@
   import ChipInput from '@/components/ChipInput.vue'
 
   const config = reactive({
-    autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove'],
+    autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove', 'javascript', 'vue', 'webdev', 'beginners', 'open-source', 'opensource', 'vuejs', 'npm'],
     placeholder: 'codepen',
     maxChips: 7
   })
