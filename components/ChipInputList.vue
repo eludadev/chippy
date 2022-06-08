@@ -36,7 +36,8 @@
 	class="flex flex-wrap gap-1">
 		<li 
 		id="input"
-		:class="['basis-20 grow order-2', {'basis-full':props.inputIsOverflow}]"
+		class="basis-20 grow order-2"
+		:class="{'basis-full':props.inputIsOverflow}"
 		:key="`USERINPUT`">
 			<slot name="input"/>
 		</li>
