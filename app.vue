@@ -3,6 +3,7 @@
   import ChipInput from '@/components/ChipInput.vue'
 
   const config = reactive({
+    label: 'Tags',
     autocomplete: ['codepen', 'css', 'html', 'AcrobaticRemove', 'javascript', 'vue', 'webdev', 'beginners', 'open-source', 'opensource', 'vuejs', 'npm'],
     placeholder: 'codepen',
     maxChips: 7
@@ -54,6 +55,7 @@
     ref="input"
     @delete:chip="onDeleteChip"
     :autocomplete="config.autocomplete"
+    :label="config.label"
     :placeholder="config.placeholder"
     :max-chips="config.maxChips"
     />

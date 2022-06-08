@@ -9,6 +9,10 @@
       type: Array,
       default: []
     },
+    label: {
+      type: String,
+      default: ''
+    },
     placeholder: {
       type: String,
       default: ''
@@ -78,7 +82,11 @@
   :class="['bg-stone-800 px-2 py-2 rounded overflow-hidden',
   { 'outline outline-2 outline-red-500': isWarning }]"
   @submit.prevent>
-    <label for="chips-input" class="sr-only">Input your tags</label>
+    <label for="chips-input" v-if="props.label.length"
+    class="text-stone-50 text-sm ml-2 mb-2 block">
+      {{ props.label }}
+    </label>
+    <label for="chips-input" class="sr-only" v-else>Enter your tags:</label>
     <ChipList :chips="state.chips" :input-is-overflow="isOverflow" ref="chipList" @delete="onDeleteChip">
       <template #input>
         <ChipInputArea
