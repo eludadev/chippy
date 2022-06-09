@@ -1,6 +1,6 @@
 {
   "name": "@vueware/chippy",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Chippy, a tag-based input UI, for Vue.",
   "files": [
     "dist"
