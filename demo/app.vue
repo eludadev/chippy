@@ -52,7 +52,7 @@
 
 <template>
   <main class="mx-2">
-    <ChipInput 
+    <Chippy 
     ref="input"
     @delete:chip="onDeleteChip"
     :autocomplete="config.autocomplete"
