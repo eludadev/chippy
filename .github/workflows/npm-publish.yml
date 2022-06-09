@@ -24,6 +24,11 @@ jobs:
           path: |
             dist
             !dist/**/*.md
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
       - name: Publish to NPM
         run: yarn publish --access public
         env:
