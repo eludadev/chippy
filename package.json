@@ -5,15 +5,15 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/my-lib.umd.js",
-  "module": "./dist/my-lib.es.js",
+  "main": "./dist/chippy.umd.js",
+  "module": "./dist/chippy.es.js",
   "repository": "git+https://github.com/eludadev/chippy.git",
   "author": "eludadev",
   "license": "MIT",
   "exports": {
     ".": {
-      "import": "./dist/my-lib.es.js",
-      "require": "./dist/my-lib.umd.js"
+      "import": "./dist/chippy.es.js",
+      "require": "./dist/chippy.umd.js"
     }
   },
   "scripts": {

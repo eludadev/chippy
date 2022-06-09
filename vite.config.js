@@ -13,7 +13,7 @@ module.exports = defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'lib/main.js'),
       name: 'MyLib',
-      fileName: (format) => `my-lib.${format}.js`
+      fileName: (format) => `chippy.${format}.js`
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
