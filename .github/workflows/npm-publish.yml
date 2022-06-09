@@ -8,9 +8,10 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build_and_publish:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -18,13 +19,14 @@ jobs:
           cache: 'yarn'
       - run: yarn install
       - run: yarn build
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-without-markdown
+          path: |
+            dist
+            !dist/**/*.md
+      - name: Publish to NPM
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
