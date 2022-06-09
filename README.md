@@ -1,8 +1,8 @@
 ## How to Use
 
 ```js
-import Chippy from 'chippy'
-import 'chippy/lib/style.css'
+import Chippy from '@vueware/chippy'
+import '@vueware/chippy/lib/style.css'
 ```
 
 ```html
