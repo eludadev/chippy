@@ -12,13 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v3
+        uses: actions/setup-node@v3
+      - name: npm install, build, and test
         with:
           node-version: 16
           cache: 'yarn'
-      - run: yarn install
-      - run: yarn build
+        run: yarn install
+        run: yarn build
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -27,11 +28,11 @@ jobs:
             dist
             !dist/**/*.md
       - name: Publish to NPM
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v3
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: yarn publish --access public
+        run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
