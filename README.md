@@ -6,7 +6,7 @@ import '@vueware/chippy/lib/style.css'
 ```
 
 ```html
-<ChipInput
+<Chippy
 :autocomplete="['vue', 'html', 'css', 'codepen']"
 :label="'Tags:'"
 :placeholder="'codepen'"
