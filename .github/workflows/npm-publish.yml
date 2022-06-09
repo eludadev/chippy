@@ -25,9 +25,9 @@ jobs:
             dist
             !dist/**/*.md
       - name: Publish to NPM
-        run: yarn publish --access public
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
+        run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
