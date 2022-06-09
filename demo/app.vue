@@ -1,7 +1,7 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
-  import ChipInput from './chippy/chippy.es.js'
-  import './chippy/style.css'
+  import Chippy from '@vueware/chippy'
+  import '@vueware/chippy/dist/style.css'
 
   const config = reactive({
     label: 'Tags',

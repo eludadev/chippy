@@ -13,7 +13,8 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
-    "nuxt": "3.0.0-rc.3"
+    "nuxt": "3.0.0-rc.3",
+    "@vueware/chippy": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
