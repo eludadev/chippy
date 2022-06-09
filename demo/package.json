@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "nuxt": "3.0.0-rc.3",
-    "@vueware/chippy": "latest"
+    "@vueware/chippy": "*"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
