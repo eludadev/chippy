@@ -94,7 +94,7 @@
 
 <template>
   <form
-  class="bg-stone-800 px-2 py-2 rounded overflow-hidden"
+  class="bg-stone-800 px-2 py-2 rounded overflow-hidden transition-[outline] duration-200 ease-in-out"
   :class="{'warning': isWarning}"
   @submit.prevent>
 
