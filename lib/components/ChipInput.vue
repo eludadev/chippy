@@ -64,11 +64,7 @@
   const smAndLarger = breakpoints.greater('sm')
 
   function onLastBackspace() {
-    if (smAndLarger.value) {
-      chipList.value.focusLast() // Focus on last chip if on desktop
-    } else {
-      deleteLastChip() // Delete it if on mobile
-    }
+    chipList.value.focusLast() // Focus on last chip if on desktop
     emit('delete:chip')
   }
 
